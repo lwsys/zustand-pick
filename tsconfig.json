@@ -9,7 +9,9 @@
     "resolveJsonModule": true,
     "moduleResolution": "bundler",
     "useDefineForClassFields": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "jsx": "react-jsx",
+    "types": ["@vitest/browser/matchers"]
   },
   "include": ["src"]
 }
