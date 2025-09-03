@@ -12,14 +12,14 @@ type StatePick = <
   Mps extends [StoreMutatorIdentifier, unknown][] = [],
   Mcs extends [StoreMutatorIdentifier, unknown][] = []
 >(
-  config: StateCreator<TState, [...Mps, ["state", unknown]], Mcs>
-) => StateCreator<TState, Mps, [["state", TState], ...Mcs]>;
+  config: StateCreator<TState, [...Mps, ["use", unknown]], Mcs>
+) => StateCreator<TState, Mps, [["use", () => TState], ...Mcs]>;
 
 type Write<T, U> = Omit<T, keyof U> & U;
 
 declare module "zustand/vanilla" {
   interface StoreMutators<S, A> {
-    state: Write<S, { state: A }>;
+    use: Write<S, { use: A }>;
   }
 }
 
@@ -29,7 +29,7 @@ export const createSelector = (<TState extends object>(
   (
     set: StoreApi<TState>["setState"],
     get: StoreApi<TState>["getState"],
-    api: Mutate<StoreApi<TState>, [["state", TState]]>
+    api: Mutate<StoreApi<TState>, [["use", () => TState]]>
   ) => {
     const proxyObject = new Proxy({} as TState, {
       get: (_, path) => {
@@ -41,7 +41,8 @@ export const createSelector = (<TState extends object>(
         return value;
       },
     });
-    api.state = proxyObject;
+    // expose a "use" hooks to reducing mental load.
+    api.use = () => proxyObject;
 
     return fn(set, get, api);
   }) as StatePick;

@@ -4,7 +4,7 @@ let countRenderCount = 0;
 export const getCountRenderCount = () => countRenderCount;
 export const setCountRenderCount = (v: number) => (countRenderCount = v);
 export const Count = () => {
-  const { count, inc } = store.state;
+  const { count, inc } = store.use();
   countRenderCount++;
   return (
     <div>
@@ -18,7 +18,7 @@ export let toggleRenderCount = 0;
 export const getToggleRenderCount = () => toggleRenderCount;
 export const setToggleRenderCount = (v: number) => (toggleRenderCount = v);
 export const Toggle = () => {
-  const { value, setValue } = store.state;
+  const { value, setValue } = store.use();
   toggleRenderCount++;
   return (
     <div>
